@@ -1,24 +1,25 @@
 import { signUp } from '../../api/auth';
 
-export const AUTH_USER = 'users/AUTH_USER';
-export const AUTH_USER_SUCCESS = 'users/AUTH_USER_SUCCESS';
-export const AUTH_USER_FAIL = 'users/AUTH_USER_FAIL';
-export const UNAUTH_USER = 'users/UNAUTH_USER';
+
+export const AUTH_USER = 'auth/AUTH_USER';
+export const AUTH_USER_SUCCESS = 'auth/AUTH_USER_SUCCESS';
+export const AUTH_USER_FAIL = 'auth/AUTH_USER_FAIL';
+export const UNAUTH_USER = 'auth/UNAUTH_USER';
 
 const defaultState = {
   isAuth: false,
   loading: false,
-  error: null,
+  error: false,
 };
 
 export default function authReducer(state = defaultState, action) {
   switch (action.type) {
     case AUTH_USER:
-      return { ...state, error: null, loading: true, isAuth: true };
+      return { ...state, error: null, loading: true, isAuth: false };
     case AUTH_USER_SUCCESS:
       return { ...state, error: null, loading: false, isAuth: true };
     case AUTH_USER_FAIL:
-      return { ...state, error: action.message, loading: false, isAuth: false };
+      return { ...state, error: true, loading: false, isAuth: false };
     case UNAUTH_USER:
       return { ...state, isAuth: false };
 
