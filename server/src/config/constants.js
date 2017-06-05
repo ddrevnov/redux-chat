@@ -1,9 +1,8 @@
 require('dotenv').config();
 
 const WHITELIST = {
-  posts: {
-    create: ['title', 'text'],
-    update: ['title', 'text'],
+  messages: {
+    create: ['text', 'room'],
   },
   users: {
     create: ['email', 'username', 'password'],

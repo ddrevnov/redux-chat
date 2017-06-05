@@ -8,7 +8,7 @@ import reducers from './modules';
 import apiMiddleware from './middleware/api';
 import sagas from './sagas';
 
-const history = createHistory();
+export const history = createHistory();
 const middlewareRouter = routerMiddleware(history);
 
 const create = () => {
@@ -16,7 +16,7 @@ const create = () => {
   const middleware = [
     middlewareRouter,
     apiMiddleware,
-    sagaMiddleware,
+    sagaMiddleware
   ];
 
   const store = createStore(
@@ -24,13 +24,9 @@ const create = () => {
     composeWithDevTools(applyMiddleware(...middleware)),
   );
 
-  sagas.forEach(saga => sagaMiddleware.run(saga));
-
-  window.store = store;
+  sagaMiddleware.run(sagas);
 
   return store;
 };
 
 export default create();
-
-export { history };

@@ -4,7 +4,6 @@ instrumentation:
     'dist/**',
     'coverage/**',
     'scripts/**',
-    'src/controllers/seed.controller.js',
     'src/seeds/**',
     'package-scripts.js',
     '__mocks__/**',

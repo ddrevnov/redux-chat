@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Grid, Button, Form, Label } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
+import { Grid, Button, Form, Label } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+
 import * as actions from '../../redux/modules/auth';
 
 const renderField = ({ input, label, type, meta: { touched, error } }) => (
@@ -16,7 +17,7 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
 );
 
 @reduxForm({
-  form: 'signup',
+  form: 'signin',
   validate
 })
 @connect(
@@ -27,20 +28,18 @@ const renderField = ({ input, label, type, meta: { touched, error } }) => (
     actions: bindActionCreators(actions, dispatch)
   })
 )
-export default class SignUp extends Component {
+export default class SignIn extends Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
-    pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
-    reset: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
   };
 
   handleFormSubmit(formProps) {
-    const { signupUser } = this.props.actions;
+    const { signinUser } = this.props.actions;
 
-    signupUser(formProps);
+    signinUser(formProps);
   }
 
   errorAlert() {
@@ -54,7 +53,7 @@ export default class SignUp extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, reset, submitting, auth } = this.props;
+    const { handleSubmit, submitting, auth } = this.props;
 
     if (auth.isAuth) {
       return (<Redirect to="/" />);
@@ -64,13 +63,6 @@ export default class SignUp extends Component {
       <Grid columns={1}>
         <Grid.Column>
           <Form onSubmit={handleSubmit(::this.handleFormSubmit)}>
-            <Field
-              component={renderField}
-              label="User Name:"
-              name="username"
-              type="text"
-            />
-
             <Field
               component={renderField}
               label="Email:"
@@ -85,23 +77,15 @@ export default class SignUp extends Component {
               type="password"
             />
 
-            <Field
-              component={renderField}
-              label="password Confirm:"
-              name="passwordConfirm"
-              type="password"
-            />
-
             {this.errorAlert()}
 
             <Button
               color="green"
               disabled={submitting}
-              type='submit'>Sign Up</Button>
-            <Button
-              color="red"
-              type="button"
-              disabled={pristine || submitting} onClick={reset}>Clear Values</Button>
+              type='submit'
+            >
+              Sign In
+            </Button>
           </Form>
         </Grid.Column>
       </Grid>
@@ -111,10 +95,6 @@ export default class SignUp extends Component {
 
 function validate(values) {
   const errors = {};
-
-  if (!values.username) {
-    errors.username = 'Please enter a username';
-  }
 
   if (!values.email) {
     errors.email = 'Please enter an email'
@@ -128,14 +108,6 @@ function validate(values) {
     errors.password = 'Password length must be at least 6 characters long';
   } else if (!/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/.test(values.password)) {
     errors.password = 'Password should has numbers and letters';
-  }
-
-  if (!values.passwordConfirm) {
-    errors.passwordConfirm = 'Please enter a password confirm';
-  }
-
-  if (values.password !== values.passwordConfirm) {
-    errors.password = 'Password must match';
   }
 
   return errors;

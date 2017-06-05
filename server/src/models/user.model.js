@@ -5,7 +5,6 @@ import { hashSync, compareSync } from 'bcrypt-nodejs';
 import jwt from 'jsonwebtoken';
 import uniqueValidator from 'mongoose-unique-validator';
 
-import Post from './post.model';
 import constants from '../config/constants';
 
 const UserSchema = new Schema(
@@ -69,75 +68,15 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.methods = {
-  /**
-   * Favorites actions
-   *
-   * @public
-   */
-  _favorites: {
-    /**
-     * Favorite a post or unfavorite if already here
-     *
-     * @param {String} postId - _id of the post like
-     * @returns {Promise}
-     */
-    async posts(postId) {
-      try {
-        if (this.favorites.posts.indexOf(postId) >= 0) {
-          this.favorites.posts.remove(postId);
-          await Post.decFavoriteCount(postId);
-        } else {
-          await Post.incFavoriteCount(postId);
-          this.favorites.posts.push(postId);
-        }
 
-        return this.save();
-      } catch (err) {
-        return err;
-      }
-    },
-
-    /**
-     * Check if post is favorite by current user.
-     *
-     * @param {String} postId - _id of the post
-     * @returns {Boolean} isFavorite - post is favorite by current user
-     */
-    isPostIsFavorite(postId) {
-      if (this.favorites.posts.indexOf(postId) >= 0) {
-        return true;
-      }
-
-      return false;
-    },
-  },
-  /**
-   * Authenticate the user
-   *
-   * @public
-   * @param {String} password - provided by the user
-   * @returns {Boolean} isMatch - password match
-   */
   authenticateUser(password) {
     return compareSync(password, this.password);
   },
-  /**
-   * Hash the user password
-   *
-   * @private
-   * @param {String} password - user password choose
-   * @returns {String} password - hash password
-   */
+
   _hashPassword(password) {
     return hashSync(password);
   },
 
-  /**
-   * Generate a jwt token for authentication
-   *
-   * @public
-   * @returns {String} token - JWT token
-   */
   createToken() {
     return jwt.sign(
       {
@@ -147,12 +86,6 @@ UserSchema.methods = {
     );
   },
 
-  /**
-   * Parse the user object in data we wanted to send when is auth
-   *
-   * @public
-   * @returns {Object} User - ready for auth
-   */
   toAuthJSON() {
     return {
       _id: this._id,
@@ -160,12 +93,6 @@ UserSchema.methods = {
     };
   },
 
-  /**
-   * Parse the user object in data we wanted to send
-   *
-   * @public
-   * @returns {Object} User - ready for populate
-   */
   toJSON() {
     return {
       _id: this._id,

@@ -1,48 +1,65 @@
-import React, { Component } from 'react';
-import { Menu } from 'semantic-ui-react';
-import { push } from 'react-router-redux';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Menu, Icon } from 'semantic-ui-react';
 import { NavLink } from 'react-router-dom';
-import store  from '../../../redux/store';
 
-export default class Header extends Component {
+const Header = ({ logout, isAuth }) => {
 
-  handleItemClick = (e, { name }) => {
-    store.dispatch(push(`/${name}`));
-  };
+  return (
+    <Menu pointing secondary>
+      <Menu.Item
+        as={NavLink}
+        exact
+        to="/"
+        activeClassName="active"
+      >
+        Chat
+      </Menu.Item>
 
-  render() {
-    return (
-      <Menu>
+      <Menu.Item
+        as={NavLink}
+        to="/about"
+        activeClassName="active"
+      >
+        About
+      </Menu.Item>
+
+      <Menu.Menu position='right'>
+        {!isAuth &&
         <Menu.Item
-          name=""
-          as={NavLink}
-          exact
-          to="/"
-          activeClassName="active"
-          onClick={this.handleItemClick}
-        >
-          Chat
-        </Menu.Item>
-
-        <Menu.Item
-          name="about"
-          as={NavLink}
-          to="/about"
-          activeClassName="active"
-          onClick={this.handleItemClick}
-        >
-          About
-        </Menu.Item>
-        <Menu.Item
-          name="signup"
           as={NavLink}
           to="/signup"
           activeClassName="active"
-          onClick={this.handleItemClick}
         >
-          SignUp
+          Sign Up
         </Menu.Item>
-      </Menu>
-    )
-  }
+        }
+
+        {!isAuth &&
+        <Menu.Item
+          as={NavLink}
+          to="/signin"
+          activeClassName="active"
+        >
+          <Icon name='sign in' title="sign in" />
+        </Menu.Item>
+        }
+
+        {isAuth &&
+        <Menu.Item
+          onClick={logout}
+        >
+          <Icon name='sign out' title="sign out" />
+        </Menu.Item>
+        }
+      </Menu.Menu>
+    </Menu>
+  )
 };
+
+Header.propTypes = {
+  logout: PropTypes.func.isRequired,
+  isAuth: PropTypes.bool.isRequired,
+};
+
+export default Header;
