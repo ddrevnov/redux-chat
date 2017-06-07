@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from '../../redux/modules/rooms';
 import { Sidebar, Segment, Button, Header, Icon, Grid } from 'semantic-ui-react';
 
 import './Chat.css';
 
 import ChatSidebar from './components/ChatSidebar';
 
-// Import actions here!!
-
-// @connect(
-//   (state, ownProps) => ({
-//     state,
-//   }),
-//   dispatch => ({
-//     actions: bindActionCreators(actions, dispatch)
-//   }))
+@connect(
+  ({ rooms }, ownProps) => ({
+    rooms,
+  }),
+  dispatch => ({
+    actions: bindActionCreators(actions, dispatch)
+  }))
 export default class Chat extends Component {
   state = { visible: false };
-  // static propTypes = {
-  //   // prop: PropTypes.object.isRequired,
-  // };
+
+  static propTypes = {
+    actions: PropTypes.object.isRequired,
+  };
 
   toggleVisibility() {
     this.setState({ visible: !this.state.visible });
@@ -29,6 +29,7 @@ export default class Chat extends Component {
 
   render() {
     const { visible } = this.state;
+    const { actions } = this.props;
 
     return (
       <Segment>
@@ -47,7 +48,10 @@ export default class Chat extends Component {
           as={Segment}
           className="chat-sidebar"
         >
-          <ChatSidebar visible={visible} />
+          <ChatSidebar
+            visible={visible}
+            createRoom={actions.createRoom}
+          />
           <Sidebar.Pusher>
             <Segment basic>
 

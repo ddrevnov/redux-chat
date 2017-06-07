@@ -3,18 +3,11 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form';
-import { Grid, Button, Form, Label } from 'semantic-ui-react';
+import { Grid, Button, Form } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 
 import * as actions from '../../redux/modules/auth';
-
-const renderField = ({ input, label, type, meta: { touched, error } }) => (
-  <Form.Field>
-    <label>{label}</label>
-    <input {...input} placeholder={label} type={type}/>
-    {touched && (error && <Label basic color='red' pointing>{error}</Label>)}
-  </Form.Field>
-);
+import RenderField from '../../components/RenderField';
 
 @reduxForm({
   form: 'signin',
@@ -64,14 +57,14 @@ export default class SignIn extends Component {
         <Grid.Column>
           <Form onSubmit={handleSubmit(::this.handleFormSubmit)}>
             <Field
-              component={renderField}
+              component={RenderField}
               label="Email:"
               name="email"
               type="email"
             />
 
             <Field
-              component={renderField}
+              component={RenderField}
               label="Password:"
               name="password"
               type="password"
