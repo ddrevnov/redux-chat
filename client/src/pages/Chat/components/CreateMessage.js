@@ -1,37 +1,38 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { reduxForm, Field } from 'redux-form';
 import { Form, Button } from 'semantic-ui-react';
 
 import RenderField from '../../../components/RenderField';
 
 @reduxForm({
-  form: 'createRoom',
+  form: 'createMessage',
   validate
 })
-export default class CreateRoom extends Component {
+export default class CreateMessage extends Component {
   static propTypes = {
-    createRoom: PropTypes.func.isRequired,
+    createMessage: PropTypes.func.isRequired,
     reset: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    room: PropTypes.object.isRequired,
   };
 
-  handleFormSubmit({ roomName }) {
-    const { createRoom, reset } = this.props;
+  handleFormSubmit({ message }) {
+    const { createMessage, reset, room } = this.props;
 
-    createRoom(roomName)
-      .then(result => reset('createRoom'));
+    createMessage({ text: message, room: room._id })
+      .then(result => reset('createMessage'));
   }
 
   render() {
     const { handleSubmit } = this.props;
 
     return (
-      <Form onSubmit={handleSubmit(::this.handleFormSubmit)}>
+      <Form reply onSubmit={handleSubmit(::this.handleFormSubmit)}>
         <Field
           component={RenderField}
-          name="roomName"
-          placeholder="Room name"
+          name="message"
+          placeholder="Enter message"
           type="text"
         />
 
@@ -39,7 +40,7 @@ export default class CreateRoom extends Component {
           color="green"
           type='submit'
         >
-          Create
+          Send
         </Button>
       </Form>
     );
@@ -49,8 +50,8 @@ export default class CreateRoom extends Component {
 function validate(values) {
   const errors = {};
 
-  if (!values.roomName) {
-    errors.roomName = 'Please enter a room name';
+  if (!values.message) {
+    errors.roomName = 'Please enter a message';
   }
 
   return errors;

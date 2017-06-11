@@ -10,7 +10,7 @@ const MessageSchema = new Schema(
       required: [true, 'Some text are required!'],
     },
     room: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: [true, 'Room is required!'],
     },
     sender: {
@@ -35,12 +35,12 @@ MessageSchema.statics = {
     });
   },
 
-  list({ skip = 0, limit = 10 } = {}) {
-    return this.find()
+  getByRoomId(id, { skip = 0, limit = 10 } = {}) {
+    return this.find({ room: id })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .populate('sender');
+      .populate('sender', 'room');
   },
 
 };

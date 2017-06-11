@@ -1,29 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Sidebar, Menu, List } from 'semantic-ui-react';
+import { Sidebar, Menu, List, Loader } from 'semantic-ui-react';
 import CreateRoom from './CreateRoom';
+import RoomItem from './RoomItem';
 
-const ChatSidebar = ({ visible, createRoom }) => {
+const ChatSidebar = ({ visible, createRoom, selectRoom, rooms: { rooms, loading } }) => {
   return (
     <Sidebar as={Menu} animation='uncover' width='wide' visible={visible} vertical inverted>
       <CreateRoom createRoom={createRoom} />
-      <List divided relaxed>
-        <List.Item>
-          <List.Content>
-            Item1
-          </List.Content>
-        </List.Item>
-        <List.Item>
-          <List.Content>
-            Item2
-          </List.Content>
-        </List.Item>
-        <List.Item>
-          <List.Content>
-            Item3
-          </List.Content>
-        </List.Item>
-      </List>
+      {loading ?
+        <Loader active inline='centered' /> :
+        <List divided relaxed>
+        {rooms.map(room =>
+          <RoomItem
+            selectRoom={selectRoom}
+            key={room._id}
+            room={room}
+          />)
+        }
+        </List>
+      }
     </Sidebar>
   );
 };
@@ -31,6 +27,8 @@ const ChatSidebar = ({ visible, createRoom }) => {
 ChatSidebar.propTypes = {
   visible: PropTypes.bool.isRequired,
   createRoom: PropTypes.func.isRequired,
+  selectRoom: PropTypes.func.isRequired,
+  rooms: PropTypes.object.isRequired,
 };
 
 export default ChatSidebar;

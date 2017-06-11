@@ -2,26 +2,39 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from '../../redux/modules/rooms';
+import * as roomsActions from '../../redux/modules/rooms';
+import * as messagesActions from '../../redux/modules/messages';
 import { Sidebar, Segment, Button, Header, Icon, Grid } from 'semantic-ui-react';
 
 import './Chat.css';
 
 import ChatSidebar from './components/ChatSidebar';
+import CommentBox from './components/CommentBox';
 
 @connect(
-  ({ rooms }, ownProps) => ({
+  ({ rooms, messages }, ownProps) => ({
     rooms,
+    messages,
   }),
   dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
+    roomsActions: bindActionCreators(roomsActions, dispatch),
+    messagesActions: bindActionCreators(messagesActions, dispatch),
   }))
 export default class Chat extends Component {
   state = { visible: false };
 
   static propTypes = {
-    actions: PropTypes.object.isRequired,
+    roomsActions: PropTypes.object.isRequired,
+    messagesActions: PropTypes.object.isRequired,
+    rooms: PropTypes.object.isRequired,
+    messages: PropTypes.object.isRequired,
   };
+
+  componentDidMount() {
+    const { fetchRooms } = this.props.roomsActions;
+
+    fetchRooms();
+  }
 
   toggleVisibility() {
     this.setState({ visible: !this.state.visible });
@@ -29,7 +42,7 @@ export default class Chat extends Component {
 
   render() {
     const { visible } = this.state;
-    const { actions } = this.props;
+    const { rooms, messages, roomsActions, messagesActions } = this.props;
 
     return (
       <Segment>
@@ -50,12 +63,16 @@ export default class Chat extends Component {
         >
           <ChatSidebar
             visible={visible}
-            createRoom={actions.createRoom}
+            createRoom={roomsActions.createRoom}
+            rooms={rooms}
+            selectRoom={roomsActions.selectRoom}
           />
           <Sidebar.Pusher>
-            <Segment basic>
-
-            </Segment>
+            <CommentBox
+              messages={messages}
+              createMessage={messagesActions.createMessage}
+              room={rooms.room}
+            />
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </Segment>

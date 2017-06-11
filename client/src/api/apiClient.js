@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-try {
-  const token = localStorage.getItem('token');
+const token = localStorage.getItem('token');
+if (token) {
   axios.defaults.headers.common['Authorization'] = token;
-} catch (err) {
-  console.warn(err);
 }
-
 
 axios.interceptors.response.use(
   res => res,

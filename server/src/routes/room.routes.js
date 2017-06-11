@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import validate from 'express-validation';
 
-import * as MessageController from '../controllers/message.controller';
+import * as RoomController from '../controllers/room.controller';
 import { authJwt } from '../services/auth';
 
 const routes = new Router();
@@ -9,14 +9,15 @@ const routes = new Router();
 routes.post(
   '/',
   authJwt,
-  validate(MessageController.validation.create),
-  MessageController.create,
+  validate(RoomController.validation.create),
+  RoomController.create,
 );
 
 routes.get(
-  '/room/:id',
+  '/',
   authJwt,
-  MessageController.getByRoomId,
+  RoomController.getList,
 );
+
 
 export default routes;

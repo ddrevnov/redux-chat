@@ -4,6 +4,9 @@ const WHITELIST = {
   messages: {
     create: ['text', 'room'],
   },
+  rooms: {
+    create: ['name'],
+  },
   users: {
     create: ['email', 'username', 'password'],
   },
