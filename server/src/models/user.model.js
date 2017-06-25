@@ -42,14 +42,6 @@ const UserSchema = new Schema(
         },
       },
     },
-    favorites: {
-      posts: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: 'Post',
-        },
-      ],
-    },
   },
   { timestamps: true },
 );

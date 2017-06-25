@@ -20,7 +20,7 @@ export default ({ dispatch, getState }) => next => (action) => {
   return promise.then(
     result => nextIfHaveAction({
       ...rest,
-      result: result.data,
+      payload: result.data,
       type: SUCCESS,
     }),
     (error) => {

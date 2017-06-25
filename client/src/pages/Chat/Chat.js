@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import * as roomsActions from '../../redux/modules/rooms';
 import * as messagesActions from '../../redux/modules/messages';
 import { Sidebar, Segment, Button, Header, Icon, Grid } from 'semantic-ui-react';
+import isEmpty from 'lodash/isEmpty';
 
 import './Chat.css';
 
@@ -32,8 +33,9 @@ export default class Chat extends Component {
 
   componentDidMount() {
     const { fetchRooms } = this.props.roomsActions;
+    const { rooms: { offset, limit } } = this.props;
 
-    fetchRooms();
+    fetchRooms(offset, limit);
   }
 
   toggleVisibility() {
@@ -66,13 +68,16 @@ export default class Chat extends Component {
             createRoom={roomsActions.createRoom}
             rooms={rooms}
             selectRoom={roomsActions.selectRoom}
+            fetchRooms={roomsActions.fetchRooms}
+            fetchMessagesByRoomId={messagesActions.fetchMessagesByRoomId}
           />
           <Sidebar.Pusher>
+            {!isEmpty(rooms.room) &&
             <CommentBox
               messages={messages}
               createMessage={messagesActions.createMessage}
               room={rooms.room}
-            />
+            />}
           </Sidebar.Pusher>
         </Sidebar.Pushable>
       </Segment>

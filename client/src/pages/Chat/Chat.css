@@ -1,3 +1,7 @@
 .chat-sidebar {
-    height: 500px;
+  height: 500px;
+}
+
+.item {
+  cursor: pointer;
 }

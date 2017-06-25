@@ -17,9 +17,17 @@ export const validation = {
 export async function create(req, res, next) {
   const body = filteredBody(req.body, contants.WHITELIST.messages.create);
   try {
+    const message = await Message.createMessage(body, req.user._id);
+    const opts = [
+      {model: 'User', path: 'sender'},
+      {model: 'Room', path: 'room'},
+    ];
+
+    await Message.populate(message, opts);
+
     return res
       .status(HTTPStatus.CREATED)
-      .json(await Message.createMessage(body, req.user._id));
+      .json(message);
   } catch (err) {
     err.status = HTTPStatus.BAD_REQUEST;
     return next(err);
@@ -27,10 +35,13 @@ export async function create(req, res, next) {
 }
 
 export async function getByRoomId({ params: { id } }, res, next) {
+
   try {
+    const messages = await Message.getByRoomId(id);
+
     return res
       .status(HTTPStatus.OK)
-      .json(await Message.getByRoomId(id));
+      .json(messages);
   } catch (err) {
     err.status = HTTPStatus.BAD_REQUEST;
     return next(err);

@@ -26,10 +26,13 @@ export async function create(req, res, next) {
 }
 
 export async function getList(req, res, next) {
+  const offset = +req.query.offset;
+  const limit = +req.query.limit;
+
   try {
-    return res
-      .status(HTTPStatus.OK)
-      .json(await Room.list());
+    const rooms = await Room.paginate({}, { offset, limit });
+
+    return res.status(HTTPStatus.OK).json(rooms);
   } catch (err) {
     err.status = HTTPStatus.BAD_REQUEST;
     return next(err);

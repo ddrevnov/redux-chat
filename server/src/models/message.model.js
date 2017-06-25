@@ -11,6 +11,7 @@ const MessageSchema = new Schema(
     },
     room: {
       type: Schema.Types.ObjectId,
+      ref: 'Room',
       required: [true, 'Room is required!'],
     },
     sender: {
@@ -26,23 +27,17 @@ MessageSchema.plugin(uniqueValidator, {
   message: '{VALUE} already taken!',
 });
 
-MessageSchema.statics = {
+MessageSchema.statics.createMessage = function(args, authorId) {
+  return this.create({
+    ...args,
+    sender: authorId,
+  });
+};
 
-  createMessage(args, authorId) {
-    return this.create({
-      ...args,
-      sender: authorId,
-    });
-  },
-
-  getByRoomId(id, { skip = 0, limit = 10 } = {}) {
-    return this.find({ room: id })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .populate('sender', 'room');
-  },
-
+MessageSchema.statics.getByRoomId = function(id) {
+  return this.find({ room: id })
+    .sort({ createdAt: 1 })
+    .populate('sender', 'room');
 };
 
 MessageSchema.methods = {
@@ -52,6 +47,7 @@ MessageSchema.methods = {
       _id: this._id,
       text: this.text,
       sender: this.sender,
+      room: this.room,
       createdAt: this.createdAt,
     };
   },

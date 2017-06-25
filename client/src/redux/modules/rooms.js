@@ -12,6 +12,9 @@ export const SELECT_ROOM = 'rooms/SELECT_ROOM';
 
 const defaultState = {
   rooms: [],
+  offset: 0,
+  limit: 10,
+  total: 0,
   room: {},
   loading: false,
   error: false,
@@ -22,9 +25,11 @@ export default function roomsReducer(state = defaultState, action) {
     case FETCH_ROOMS_SUCCESS:
       return {
         ...state,
+        offset: state.offset + 10,
+        total: action.payload.total,
         error: null,
         loading: false,
-        rooms: action.result,
+        rooms: [...state.rooms, ...action.payload.docs],
       };
     case CREATE_ROOM:
     case FETCH_ROOMS:
@@ -38,7 +43,7 @@ export default function roomsReducer(state = defaultState, action) {
         ...state,
         error: null,
         loading: false,
-        rooms: [...state.rooms, action.result]
+        rooms: [...state.rooms, action.payload]
       };
     case CREATE_ROOM_FAIL:
     case FETCH_ROOMS_FAIL:
@@ -63,15 +68,8 @@ export function createRoom(data) {
   };
 }
 
-export function fetchRooms() {
-  return {
-    types: [
-      FETCH_ROOMS,
-      FETCH_ROOMS_SUCCESS,
-      FETCH_ROOMS_FAIL,
-    ],
-    promise: api.fetchRooms(),
-  };
+export function fetchRooms(offset, limit) {
+  return { type: FETCH_ROOMS, offset, limit };
 }
 
 export function selectRoom(room) {

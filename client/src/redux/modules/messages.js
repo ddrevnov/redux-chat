@@ -20,7 +20,7 @@ export default function messagesReducer(state = defaultState, action) {
         ...state,
         error: null,
         loading: false,
-        messages: action.result,
+        messages: action.payload,
       };
     case CREATE_MESSAGE:
     case FETCH_MESSAGES:
@@ -34,7 +34,7 @@ export default function messagesReducer(state = defaultState, action) {
         ...state,
         error: null,
         loading: false,
-        messages: [...state.messages, action.result]
+        messages: [...state.messages, action.payload]
       };
     case CREATE_MESSAGE_FAIL:
     case FETCH_MESSAGES_FAIL:
@@ -56,13 +56,13 @@ export function createMessage(data) {
   };
 }
 
-export function fetchMessagesByRoomId(id) {
+export function fetchMessagesByRoomId(id, offset, limit) {
   return {
     types: [
       FETCH_MESSAGES,
       FETCH_MESSAGES_SUCCESS,
       FETCH_MESSAGES_FAIL,
     ],
-    promise: api.fetchMessagesByRoomId(id),
+    promise: api.fetchMessagesByRoomId(id, offset, limit),
   };
 }
