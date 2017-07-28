@@ -1,10 +1,5 @@
-/**
- * Create fake post for testing
- */
-
-import faker from 'faker';
-
-import BaseFactory from './base.factory';
+const faker = require('faker');
+const BaseFactory = require('./base.factory');
 
 class PostFactory extends BaseFactory {
   /**
@@ -23,4 +18,4 @@ class PostFactory extends BaseFactory {
   }
 }
 
-export default new PostFactory();
+module.exports = new PostFactory();

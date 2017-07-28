@@ -1,10 +1,5 @@
-/**
- * Create fake user for testing
- */
-
-import faker from 'faker';
-
-import BaseFactory from './base.factory';
+const faker = require('faker');
+const BaseFactory = require('./base.factory');
 
 class UserFactory extends BaseFactory {
   /**
@@ -25,4 +20,4 @@ class UserFactory extends BaseFactory {
   }
 }
 
-export default new UserFactory();
+module.exports = new UserFactory();

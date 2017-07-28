@@ -1,6 +1,6 @@
-import { expect } from 'chai';
+const { expect } = require('chai');
 
-import { filteredBody } from '../../src/utils/filteredBody';
+const { filteredBody } = require('../../utils/filteredBody');
 
 describe('#filteredBody()', () => {
   it('should filter the object given with the list provided', () => {

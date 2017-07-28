@@ -1,6 +1,6 @@
-import { expect } from 'chai';
+const { expect } = require('chai');
 
-import User from '../../src/models/user.model';
+const User = require('../../models/user.model');
 
 let testUser;
 let defaultUser;

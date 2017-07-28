@@ -1,7 +1,3 @@
-/**
- * BaseFatory
- */
-
 class BaseFactory {
   /**
    * Return a list
@@ -23,4 +19,4 @@ class BaseFactory {
   }
 }
 
-export default BaseFactory;
+module.exports = BaseFactory;

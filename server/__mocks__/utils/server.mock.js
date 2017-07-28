@@ -1,10 +1,6 @@
-/**
- * Mocker the server configuration
- */
+const supertest = require('supertest');
+const server = require('../../index');
 
-import supertest from 'supertest';
+require('../../config/database');
 
-import server from '../../src';
-import '../../src/config/database';
-
-export default supertest(server);
+module.exports = supertest(server);
