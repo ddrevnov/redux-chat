@@ -18,16 +18,11 @@ const validation = {
   },
 };
 
-async function create(req, res, next) {
+async function create(req, res) {
   const body = filteredBody(req.body, constants.WHITELIST.users.create);
 
-  try {
-    const user = await User.create(body);
-    return res.status(HTTPStatus.CREATED).json(user.toAuthJSON());
-  } catch (e) {
-    e.status = HTTPStatus.BAD_REQUEST;
-    return next(e);
-  }
+  const user = await User.create(body);
+  return res.status(HTTPStatus.CREATED).json(user.toAuthJSON());
 }
 
 module.exports = {

@@ -12,30 +12,20 @@ const validation = {
   },
 };
 
-async function create(req, res, next) {
+async function create(req, res) {
   const body = filteredBody(req.body, constants.WHITELIST.rooms.create);
-  try {
-    return res
-      .status(HTTPStatus.CREATED)
-      .json(await Room.createRoom(body, req.user._id));
-  } catch (err) {
-    err.status = HTTPStatus.BAD_REQUEST;
-    return next(err);
-  }
+  return res
+    .status(HTTPStatus.CREATED)
+    .json(await Room.createRoom(body, req.user._id));
 }
 
-async function getList(req, res, next) {
+async function getList(req, res) {
   const offset = +req.query.offset;
   const limit = +req.query.limit;
 
-  try {
-    const rooms = await Room.paginate({}, { offset, limit });
+  const rooms = await Room.paginate({}, { offset, limit });
 
-    return res.status(HTTPStatus.OK).json(rooms);
-  } catch (err) {
-    err.status = HTTPStatus.BAD_REQUEST;
-    return next(err);
-  }
+  return res.status(HTTPStatus.OK).json(rooms);
 }
 
 module.exports = {

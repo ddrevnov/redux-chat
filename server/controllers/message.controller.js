@@ -13,43 +13,40 @@ const validation = {
   },
 };
 
-async function create(req, res, next) {
+async function create(req, res) {
   const body = filteredBody(req.body, constants.WHITELIST.messages.create);
-  try {
-    const message = await Message.createMessage(body, req.user._id);
-    const opts = [
-      {model: 'User', path: 'sender'},
-      {model: 'Room', path: 'room'},
-    ];
+  const message = await Message.createMessage(body, req.user._id);
+  const opts = [
+    {model: 'User', path: 'sender'},
+    {model: 'Room', path: 'room'},
+  ];
 
-    await Message.populate(message, opts);
+  await Message.populate(message, opts);
 
-    return res
-      .status(HTTPStatus.CREATED)
-      .json(message);
-  } catch (err) {
-    err.status = HTTPStatus.BAD_REQUEST;
-    return next(err);
-  }
+  return res
+    .status(HTTPStatus.CREATED)
+    .json(message);
 }
 
-async function getByRoomId({ params: { id } }, res, next) {
+async function getByRoomId(req, res) {
+  return res
+    .status(HTTPStatus.OK)
+    .json(req.messages);
+}
 
-  try {
-    const messages = await Message.getByRoomId(id);
+async function loadRoom(req, res, next, id) {
+  const messages = await Message.getByRoomId(id);
 
-    return res
-      .status(HTTPStatus.OK)
-      .json(messages);
-  } catch (err) {
-    err.status = HTTPStatus.BAD_REQUEST;
-    return next(err);
-  }
+  if (!messages) return res.status(HTTPStatus.NOT_FOUND).send();
+
+  req.messages = messages;
+  next();
 }
 
 module.exports = {
   validation,
   create,
   getByRoomId,
+  loadRoom,
 };
 
